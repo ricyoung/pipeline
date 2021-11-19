@@ -1,0 +1,89 @@
+
+1.) USED: 
+        ccs -j 40 --min-rq 0.9 --log-level INFO --log-file log_file_54336U.txt  m54336U_200612_063943.subreadset.xml ccs_output_sept_2021/m54336U_200613_070506.ccs.bam
+        Removed (parameters: --noPolish ) 
+
+2.) Next, adapter configurations were identified and removed using Lima v1.10.0
+
+lima m54336U_200612_063943.ccs.bam \
+pacbio_RLT_barcodes.fasta  \
+output/m54336U_200612_063943.fl.bam \
+--isoseq  --peek-guess --min-score 0 --min-score-lead 0 --min-end-score 0 --min-signal-increase 10 
+
+--- DONE --- 
+
+
+3. refine
+
+
+isoseq3 refine --require-polya  --min-polya-length 20 \
+
+
+mkdir refine-fastq && for i in *.bam; do isoseq3 refine --require-polya  --min-polya-length 20 $i ../pacbio_RLT_barcodes.fasta  refine-fastq/"${i%/}.fq" ; done && ~/sms.sh
+
+-
+not sure about
+--min-rq 0.9
+
+
+4.) 
+merge all bams in to one file
+time samtools merge --threads 90  bc1023.bam *.bam && time pbindex bc1023.bam
+
+
+5.) 
+Minimap2
+recommended by the Minimap2 documentation for PacBio (-ax splice:hq -uf --MD).
+
+CMD: minimap2 -t 30 --MD -ax splice:hq -uf ../Mus_musculus.GRCm39.dna.primary_assembly.fa.gz bc1001.fastq.fastq.gz > output.sam 2>  $log
+
+minimap2 -t 40 -ax splice -uf --secondary=no 
+ 
+ -C5 -O6,24 -B4  
+
+minimap2 -t 90 --MD -ax splice -uf --secondary=no -C5
+
+--> master from farline stuff
+https://github.com/fairliereese/lab_pipelines/blob/master/long_read_preprocessing/sbatch_minimap.sh
+
+for i in *.sam;         do    minimap2      -t 95 -ax splice:hq  -uf --MD --secondary=no    /data/research/_raw_TALON_oct_2021/files_before_alignment/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz     $i > ${i%.*}_align.sam   2> ${i%}.log  ; done
+
+
+
+6
+
+# first sort the sam file
+samtools view -Sb $sam > $bam
+samtools sort $bam > $sort_bam
+samtools view -h $sort_bam > $sort_sam
+
+for i in *.sam;   do  samtools view  -@ 80 -Sb  $i > ${i%%.*}_sorted.bam   ; done  && ~/sms.sh
+for i in *.bam;   do  samtools sort  -@ 80  $i > ${i%%.*}_sorted_final.bam   ; done  && ~/sms.sh
+for i in *.bam;   do  samtools view -h   $i > ${i%%.*}_sort.sam   ; done  && ~/sms.sh
+
+for i in *.sam;  
+       do  samtools view -Sb  $i > ${i%%.*}_sorted.bam   ; done
+
+
+6a.)
+
+looking for string in file - getting rid of all words after first words
+
+
+perl -p -e 's/^chrM\t/NC_005089.1\t/g' M27_annontation.gtf  
+perl -p -e  's/^>(\S+) .+/>$1/g' input > output
+
+
+
+
+(inline)
+perl -pi -e 's/^chrM\t/NC_005089.1\t/g' M27_annontation.gtf  
+
+7.) 
+python3 TranscriptClean.py -s   ../bc1001_align.sam  
+-g ../../Mus_musculus.GRCm39.dna.primary_assembly.fa   
+ -t 40 --canonOnly --tmpDir=/home/ric/temp  --deleteTmp 
+  -o ../bc1001_cleaned/ 
+
+time python3 TranscriptClean/TranscriptClean.py -s   bc1002/bc1002_aligned.sam  -g Mus_musculus.cleaner_names.fa    -t 80 --canonOnly --tmpDir=/home/ric/temp2  --deleteTmp  -o bc1002/output/ && ~/sms.sh
+
