@@ -1,0 +1,66 @@
+
+
+8.)
+# run talon
+!talon_initialize_database \
+  --f /content/TALON/gencode.vM21.annotation.gtf \
+  --g mm10 \ 
+  --a vM21 \
+  --o c2c12
+
+
+i ran
+ talon_initialize_database  
+ 
+ --f ref/gencode.vM27.annotation.gtf 
+   --g M27 
+   --a vM27 
+  --o iso_v2
+
+
+
+
+
+9.)talon_label_reads --f /data/research/_raw_TALON_oct_2021/files_before_alignment/_transcript_cleaned/bc1001/bc1001_TC_clean.sam\
+    --g M27 \
+    --t 80 \
+    --ar 20 \
+    --deleteTmp \
+    --o labeled/bc1001
+
+
+
+
+talon_filter_transcript
+
+talon_filter_transcripts \
+    --db iso_v3.db  \
+     -a ref/gencode.vM27.annotation.gtf  \
+    --maxFracA=0.5 \
+    --minCount=5 \
+    --minDatasets=2 \
+    --o bcXXXX_pass_list.csv
+
+
+
+
+10.)
+
+!talon \
+  --f /content/TALON/talon_config.csv\
+  --db /content/TALON/c2c12.db \
+  --build mm10 \
+  --t 8 \
+  --o /content/TALON/c2c12
+
+
+--> i used
+
+talon \
+>   --f  talon_config.csv\
+>   --db iso.db \
+>   --build M27 \
+>   --t 80 \
+>   --o iso_results_y_v_o
+
+
