@@ -51,7 +51,8 @@ creates a small test file
   930  samtools view -h -b -s0.25 m54336U_200613_070506.fl.bc1003_5p--bc1003_3p.flnc.bam >tinyc.bam
   
 
-
+--> I needed to convert to fastq -> because minimap2 doesn't like my bams
+for i in *.sam; do  samtools fastq $i > $i.fastq    ; done
 
 5.) 
 Minimap2
