@@ -40,6 +40,9 @@ time samtools merge --threads 90  bc1023.bam *.bam && time pbindex bc1023.bam
   933  samtools view  tinyb.bam >> tiny_bc1003.sam
   934  samtools view  tinyc.bam >> tiny_bc1003.sam
 
+for i in *.bam; do   samtools view  $i >> bc1001.sam  ; done
+
+
 
 creates a small test file
 
