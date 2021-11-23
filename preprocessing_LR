@@ -31,6 +31,25 @@ merge all bams in to one file
 time samtools merge --threads 90  bc1023.bam *.bam && time pbindex bc1023.bam
 
 
+4a this create a header 
+ samtools view -H tinya.bam > tiny_bc1003.sam
+
+
+4b then append files to the header
+ 932  samtools view  tinya.bam >> tiny_bc1003.sam
+  933  samtools view  tinyb.bam >> tiny_bc1003.sam
+  934  samtools view  tinyc.bam >> tiny_bc1003.sam
+
+
+creates a small test file
+
+  928  samtools view -h -b -s0.25 m54336U_200602_192305.fl.bc1003_5p--bc1003_3p.flnc.bam >tinya.bam
+  929  samtools view -h -b -s0.25 m54336U_200612_063943.fl.bc1003_5p--bc1003_3p.flnc.bam >tinyb.bam
+  930  samtools view -h -b -s0.25 m54336U_200613_070506.fl.bc1003_5p--bc1003_3p.flnc.bam >tinyc.bam
+  
+
+
+
 5.) 
 Minimap2
 recommended by the Minimap2 documentation for PacBio (-ax splice:hq -uf --MD).
