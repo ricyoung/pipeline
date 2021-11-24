@@ -102,6 +102,9 @@ perl -p -e  's/^>(\S+) .+/>$1/g' input > output
 (inline)
 perl -pi -e 's/^chrM\t/NC_005089.1\t/g' M27_annontation.gtf  
 
+
+transcriptclean - requires pythong 3.7 ( however other tools require python 3.6 - just keep that in mind) - so activate a different conda
+
 7.) 
 python3 TranscriptClean.py -s   ../bc1001_align.sam  
 -g ../../Mus_musculus.GRCm39.dna.primary_assembly.fa   
