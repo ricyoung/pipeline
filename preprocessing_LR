@@ -113,3 +113,6 @@ python3 TranscriptClean.py -s   ../bc1001_align.sam
 
 time python3 TranscriptClean/TranscriptClean.py -s   bc1002/bc1002_aligned.sam  -g Mus_musculus.cleaner_names.fa    -t 80 --canonOnly --tmpDir=/home/ric/temp2  --deleteTmp  -o bc1002/output/ && ~/sms.sh
 
+used this command
+  for i in *.sam; do  python3 /data/research/apps/TranscriptClean/TranscriptClean.py -s   $i  -g Mus_musculus.cleaner_names.fa    -t 90  --canonOnly --tmpDir=/home/ric/temp2  --deleteTmp  -o ${i%%.*} && ~/sms.sh   ; done
+  
